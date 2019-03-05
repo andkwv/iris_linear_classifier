@@ -88,11 +88,19 @@ theta_7 = rd.random()
 theta_8 = rd.random()
 bias_b = rd.random()
 
+
+# Here we determine what the learning rate we would like 0.1 or 0.8
 answer = input("What do you want the learning rate to be ? \na. 0.1 	b. 0.8\n")
 if(answer == 'a'):
 	l_rate = 0.1
 else:
 	l_rate = 0.8
+
+# list for the graphs
+epochx = []
+error_1y = []
+error_2y = []
+accuracy_y = []
 
 
 # we loop for each epoch, in this case we require 100 epochs.
@@ -138,21 +146,20 @@ for epoch in range(1,101):
 		
 		#prepare for second prediction
 
-		r5 = theta_5 * SP[0]
+		r5 = theta_5 * SP[0]		#same with the previous calculation, but with differnt thetas
 		r6 = theta_6 * SP[1]
 		r7 = theta_7 * SP[2]
 		r8 = theta_8 * SP[3]
 		y2 = SP[5]
 
-		target_2 = target(r1,r2,r3,r4, bias_b)
-		sigmoid_2 = sigmoid(target_2)
-		prediction_2 = prediction(sigmoid_2)
-		err_2 = error(sigmoid_2, y2) 
+		target_2 = target(r5,r6,r7,r8, bias_b) #we all the target function, formula in function
+		sigmoid_2 = sigmoid(target_2)		#we call sigmoid function, formula is also in function
+		prediction_2 = prediction(sigmoid_2)	#call the prediction function
+		err_2 = error(sigmoid_2, y2) 		
 
 		dt_list_2 = []
-		for k in range(4):		
+		for k in range(0,4):		
 			dt_list_2.append(dtheta(sigmoid_2, y2, SP[k]))
-		dt_list_2.append(dtheta(sigmoid_2, y2, 1))
 
 	# **********************************************************************************************************
 
@@ -175,11 +182,11 @@ for epoch in range(1,101):
 		epoch_err_1 += err_1 
 		epoch_err_2 += err_2 
 
-		if(prediction_1 == y1):
-			accuracy_1 += 1
+		# if(prediction_1 == y1):
+		# 	accuracy_1 += 1
 
-		if(prediction_2 == y2):
-			accuracy_2 += 1
+		# if(prediction_2 == y2):
+		# 	accuracy_2 += 1
 
 		if(prediction_1 == y1 and prediction_2 == y2):
 			accuracy += 1
@@ -190,25 +197,39 @@ for epoch in range(1,101):
 	err_avg_1 = epoch_err_1/150
 	err_avg_2 = epoch_err_2/150
 	
-	accuracy_1 = accuracy_1/150
-	accuracy_2 = accuracy_2/150
+	# accuracy_1 = accuracy_1/150
+	# accuracy_2 = accuracy_2/150
 	accuracy = accuracy/150
 
 	print("Epoch %s. \nError_avg 1: %s \t Error_avg 2: %s" % (epoch, err_avg_1, err_avg_2))
 
-	print("Accuracy_avg_1: %s Accuracy_avg_2: %s Accuracy: %s" % (accuracy_1, accuracy_2, accuracy))
-	# print("Accuracy_avg: %s" % (accuracy))
+	# print("Accuracy_avg_1: %s Accuracy_avg_2: %s Accuracy: %s" % (accuracy_1, accuracy_2, accuracy))
+	print("Accuracy_avg: %s" % (accuracy))
 	print("\n\n")
 
-	plt.figure(1)
-	plt.plot(epoch, err_avg_1, '-o')
+	# we append keep track of the values for to plot the graph later on
+	epochx.append(epoch)
+	error_1y.append(err_avg_1)
+	error_2y.append(err_avg_2)
+	accuracy_y.append(accuracy)
+	# plt.figure(1)
+	# plt.plot(epoch, err_avg_1, '-o')
 	
-	plt.figure(2)
-	plt.plot(epoch, err_avg_2, '-o')
+	# plt.figure(2)
+	# plt.plot(epoch, err_avg_2, '-o')
 	
-	plt.figure(3)
-	plt.plot(epoch, accuracy, '-o')
+	# plt.figure(3)
+	# plt.plot(epoch, accuracy, '-o')
 
+# Just to remind you in case you forgot
 print("THIS IS RESULT WITH %s LEARNING RATE" % (l_rate))
-plt.show()
+
+# to plot the graph
+plt.figure(1)	#this is meant for first and second error graph, both will be combined in same grpah
+plt.plot(epochx, error_1y)
+plt.plot(epochx, error_2y)
+
+plt.figure(2)	#this is meant for the accuracy graph
+plt.plot(epochx, accuracy_y)
+plt.show()		#we show both
 
